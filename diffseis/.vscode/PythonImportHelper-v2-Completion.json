@@ -1,0 +1,460 @@
+[
+    {
+        "label": "math",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "math",
+        "description": "math",
+        "detail": "math",
+        "documentation": {}
+    },
+    {
+        "label": "copy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "copy",
+        "description": "copy",
+        "detail": "copy",
+        "documentation": {}
+    },
+    {
+        "label": "torch",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch",
+        "description": "torch",
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "device",
+        "importPath": "torch",
+        "description": "torch",
+        "isExtraImport": true,
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "nn",
+        "importPath": "torch",
+        "description": "torch",
+        "isExtraImport": true,
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "einsum",
+        "importPath": "torch",
+        "description": "torch",
+        "isExtraImport": true,
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "nn",
+        "importPath": "torch",
+        "description": "torch",
+        "isExtraImport": true,
+        "detail": "torch",
+        "documentation": {}
+    },
+    {
+        "label": "torch.nn.functional",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "torch.nn.functional",
+        "description": "torch.nn.functional",
+        "detail": "torch.nn.functional",
+        "documentation": {}
+    },
+    {
+        "label": "isfunction",
+        "importPath": "inspect",
+        "description": "inspect",
+        "isExtraImport": true,
+        "detail": "inspect",
+        "documentation": {}
+    },
+    {
+        "label": "isfunction",
+        "importPath": "inspect",
+        "description": "inspect",
+        "isExtraImport": true,
+        "detail": "inspect",
+        "documentation": {}
+    },
+    {
+        "label": "partial",
+        "importPath": "functools",
+        "description": "functools",
+        "isExtraImport": true,
+        "detail": "functools",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "tqdm",
+        "importPath": "tqdm",
+        "description": "tqdm",
+        "isExtraImport": true,
+        "detail": "tqdm",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "data",
+        "importPath": "torch.utils",
+        "description": "torch.utils",
+        "isExtraImport": true,
+        "detail": "torch.utils",
+        "documentation": {}
+    },
+    {
+        "label": "autocast",
+        "importPath": "torch.cuda.amp",
+        "description": "torch.cuda.amp",
+        "isExtraImport": true,
+        "detail": "torch.cuda.amp",
+        "documentation": {}
+    },
+    {
+        "label": "GradScaler",
+        "importPath": "torch.cuda.amp",
+        "description": "torch.cuda.amp",
+        "isExtraImport": true,
+        "detail": "torch.cuda.amp",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "Adam",
+        "importPath": "torch.optim",
+        "description": "torch.optim",
+        "isExtraImport": true,
+        "detail": "torch.optim",
+        "documentation": {}
+    },
+    {
+        "label": "transforms",
+        "importPath": "torchvision",
+        "description": "torchvision",
+        "isExtraImport": true,
+        "detail": "torchvision",
+        "documentation": {}
+    },
+    {
+        "label": "utils",
+        "importPath": "torchvision",
+        "description": "torchvision",
+        "isExtraImport": true,
+        "detail": "torchvision",
+        "documentation": {}
+    },
+    {
+        "label": "Image",
+        "importPath": "PIL",
+        "description": "PIL",
+        "isExtraImport": true,
+        "detail": "PIL",
+        "documentation": {}
+    },
+    {
+        "label": "GaussianDiffusion",
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "isExtraImport": true,
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "isExtraImport": true,
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "UNet",
+        "importPath": "unet",
+        "description": "unet",
+        "isExtraImport": true,
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "GaussianDiffusion",
+        "kind": 6,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "class GaussianDiffusion(nn.Module):\n    def __init__(\n        self,\n        denoise_fn,\n        mode,\n        channels,\n        image_size,\n        timesteps=2000,\n        loss_type='l1',\n    ):",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "Dataset",
+        "kind": 6,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "class Dataset(data.Dataset):\n    def __init__(self, folder, image_size, mode):\n        super().__init__()\n        self.folder = folder\n        self.image_size = image_size\n        self.mode = mode\n        self.data_files = [self.folder +\"data/\"+ f for f in os.listdir(self.folder+\"data/\") if os.path.isfile(os.path.join(self.folder+\"data/\", f))]\n        self.labels_files = [self.folder +\"labels/\"+f for f in os.listdir(self.folder+\"labels/\") if os.path.isfile(os.path.join(self.folder+\"labels/\", f))]\n        self.transform = transforms.Compose([\n            transforms.Resize(image_size),",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "EMA",
+        "kind": 6,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "class EMA():\n    def __init__(self, beta):\n        super().__init__()\n        self.beta = beta\n    def update_model_average(self, ma_model, current_model):\n        # 遍历当前模型和移动平均模型的参数\n        for current_params, ma_params in zip(current_model.parameters(), ma_model.parameters()):\n            old_weight, up_weight = ma_params.data, current_params.data\n            # 更新移动平均值\n            ma_params.data = self.update_average(old_weight, up_weight)",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "Trainer",
+        "kind": 6,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "class Trainer(object):\n    def __init__(\n        self,\n        diffusion_model,       \n        mode,\n        folder,\n        *,\n        ema_decay = 0.999,\n        image_size = (128,128),\n        train_batch_size = 32,",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "cycle",
+        "kind": 2,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "def cycle(dl):\n    while True:\n        for data in dl:\n            yield data\ndef num_to_groups(num, divisor):\n    groups = num // divisor\n    remainder = num % divisor\n    arr = [divisor] * groups\n    if remainder > 0:\n        arr.append(remainder)",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "num_to_groups",
+        "kind": 2,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "def num_to_groups(num, divisor):\n    groups = num // divisor\n    remainder = num % divisor\n    arr = [divisor] * groups\n    if remainder > 0:\n        arr.append(remainder)\n    return arr\ndef _warmup_beta(linear_start, linear_end, n_timestep, warmup_frac):\n    betas = linear_end * np.ones(n_timestep, dtype=np.float64)\n    warmup_time = int(n_timestep * warmup_frac)",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "make_beta_schedule",
+        "kind": 2,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "def make_beta_schedule(schedule, n_timestep, linear_start=1e-4, linear_end=2e-2, cosine_s=8e-3):\n    if schedule == 'quad':\n        betas = np.linspace(linear_start ** 0.5, linear_end ** 0.5,\n                            n_timestep, dtype=np.float64) ** 2\n    elif schedule == 'linear':\n        betas = np.linspace(linear_start, linear_end,\n                            n_timestep, dtype=np.float64)\n    elif schedule == 'warmup10':\n        betas = _warmup_beta(linear_start, linear_end,\n                             n_timestep, 0.1)",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "exists",
+        "kind": 2,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "def exists(x):\n    return x is not None\ndef default(val, d):\n    if exists(val):\n        return val\n    return d() if isfunction(d) else d\nclass GaussianDiffusion(nn.Module):\n    def __init__(\n        self,\n        denoise_fn,",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "default",
+        "kind": 2,
+        "importPath": "diffusion",
+        "description": "diffusion",
+        "peekOfCode": "def default(val, d):\n    if exists(val):\n        return val\n    return d() if isfunction(d) else d\nclass GaussianDiffusion(nn.Module):\n    def __init__(\n        self,\n        denoise_fn,\n        mode,\n        channels,",
+        "detail": "diffusion",
+        "documentation": {}
+    },
+    {
+        "label": "mode",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "mode = \"demultiple\" #demultiple, interpolation, denoising\nfolder = \"dataset/\"+mode+\"/data_train/\"\nimage_size = (256,256)\nmodel = UNet(\n        in_channel=2,\n        out_channel=1\n).cuda()\ndiffusion = GaussianDiffusion(\n    model,\n    mode = mode,",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "folder",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "folder = \"dataset/\"+mode+\"/data_train/\"\nimage_size = (256,256)\nmodel = UNet(\n        in_channel=2,\n        out_channel=1\n).cuda()\ndiffusion = GaussianDiffusion(\n    model,\n    mode = mode,\n    channels = 1,",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "image_size",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "image_size = (256,256)\nmodel = UNet(\n        in_channel=2,\n        out_channel=1\n).cuda()\ndiffusion = GaussianDiffusion(\n    model,\n    mode = mode,\n    channels = 1,\n    image_size = image_size,",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "model",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "model = UNet(\n        in_channel=2,\n        out_channel=1\n).cuda()\ndiffusion = GaussianDiffusion(\n    model,\n    mode = mode,\n    channels = 1,\n    image_size = image_size,\n    timesteps = 2000,",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "diffusion",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "diffusion = GaussianDiffusion(\n    model,\n    mode = mode,\n    channels = 1,\n    image_size = image_size,\n    timesteps = 2000,\n    loss_type = 'l1', # L1 or L2\n).cuda()\ntrainer = Trainer(\n    diffusion,",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "trainer",
+        "kind": 5,
+        "importPath": "run",
+        "description": "run",
+        "peekOfCode": "trainer = Trainer(\n    diffusion,\n    mode = mode,\n    folder = folder,\n    image_size = image_size,\n    train_batch_size = 4, #32 for A100; 16 for GTX\n    train_lr = 2e-5,\n    train_num_steps = 1000000,         # total training steps\n    gradient_accumulate_every = 2,    # gradient accumulation steps 梯度累积步骤\n    ema_decay = 0.995,                # exponential moving average decay",
+        "detail": "run",
+        "documentation": {}
+    },
+    {
+        "label": "PositionalEncoding",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class PositionalEncoding(nn.Module):\n    def __init__(self, dim):\n        super().__init__()\n        self.dim = dim\n    def forward(self, noise_level):\n        count = self.dim // 2\n        step = torch.arange(count, dtype=noise_level.dtype,\n                            device=noise_level.device) / count\n        encoding = noise_level.unsqueeze(\n            1) * torch.exp(-math.log(1e4) * step.unsqueeze(0))",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "FeatureWiseAffine",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class FeatureWiseAffine(nn.Module):\n    def __init__(self, in_channels, out_channels, use_affine_level=False):\n        super(FeatureWiseAffine, self).__init__()\n        self.use_affine_level = use_affine_level\n        self.noise_func = nn.Sequential(\n            nn.Linear(in_channels, out_channels*(1+self.use_affine_level))\n        )\n    def forward(self, x, noise_embed):\n        batch = x.shape[0]\n        if self.use_affine_level:",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "Swish",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class Swish(nn.Module):\n    def forward(self, x):\n        return x * torch.sigmoid(x)\nclass Upsample(nn.Module):\n    def __init__(self, dim):\n        super().__init__()\n        self.up = nn.Upsample(scale_factor=2, mode=\"nearest\")\n        self.conv = nn.Conv2d(dim, dim, 3, padding=1)\n    def forward(self, x):\n        return self.conv(self.up(x))",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "Upsample",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class Upsample(nn.Module):\n    def __init__(self, dim):\n        super().__init__()\n        self.up = nn.Upsample(scale_factor=2, mode=\"nearest\")\n        self.conv = nn.Conv2d(dim, dim, 3, padding=1)\n    def forward(self, x):\n        return self.conv(self.up(x))\nclass Downsample(nn.Module):\n    def __init__(self, dim):\n        super().__init__()",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "Downsample",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class Downsample(nn.Module):\n    def __init__(self, dim):\n        super().__init__()\n        self.conv = nn.Conv2d(dim, dim, 3, 2, 1)\n    def forward(self, x):\n        return self.conv(x)\n# building block modules\nclass Block(nn.Module):\n    def __init__(self, dim, dim_out, groups=32, dropout=0):\n        super().__init__()",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "Block",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class Block(nn.Module):\n    def __init__(self, dim, dim_out, groups=32, dropout=0):\n        super().__init__()\n        self.block = nn.Sequential(\n            nn.GroupNorm(groups, dim),\n            Swish(),\n            nn.Dropout(dropout) if dropout != 0 else nn.Identity(),\n            nn.Conv2d(dim, dim_out, 3, padding=1)\n        )\n    def forward(self, x):",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "ResnetBlock",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class ResnetBlock(nn.Module):\n    def __init__(self, dim, dim_out, noise_level_emb_dim=None, dropout=0, use_affine_level=False, norm_groups=32):\n        super().__init__()\n        self.noise_func = FeatureWiseAffine(\n            noise_level_emb_dim, dim_out, use_affine_level)\n        self.block1 = Block(dim, dim_out, groups=norm_groups)\n        self.block2 = Block(dim_out, dim_out, groups=norm_groups, dropout=dropout)\n        self.res_conv = nn.Conv2d(\n            dim, dim_out, 1) if dim != dim_out else nn.Identity()\n    def forward(self, x, time_emb):",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "SelfAttention",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class SelfAttention(nn.Module):\n    def __init__(self, in_channel, n_head=1, norm_groups=32):\n        super().__init__()\n        self.n_head = n_head\n        self.norm = nn.GroupNorm(norm_groups, in_channel)\n        self.qkv = nn.Conv2d(in_channel, in_channel * 3, 1, bias=False)\n        self.out = nn.Conv2d(in_channel, in_channel, 1)\n    def forward(self, input):\n        batch, channel, height, width = input.shape\n        n_head = self.n_head",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "ResnetBlocWithAttn",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class ResnetBlocWithAttn(nn.Module):\n    def __init__(self, dim, dim_out, *, noise_level_emb_dim=None, norm_groups=32, dropout=0, with_attn=False):\n        super().__init__()\n        self.with_attn = with_attn\n        self.res_block = ResnetBlock(\n            dim, dim_out, noise_level_emb_dim, norm_groups=norm_groups, dropout=dropout)\n        if with_attn:\n            self.attn = SelfAttention(dim_out, norm_groups=norm_groups)\n    def forward(self, x, time_emb):\n        x = self.res_block(x, time_emb)",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "UNet",
+        "kind": 6,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "class UNet(nn.Module):\n    def __init__(\n        self,\n        in_channel=2,\n        out_channel=1,\n        inner_channel=64,\n        norm_groups=16,\n        channel_mults=(1, 2, 4, 8, 16),\n        attn_res=[],\n        res_blocks=1,",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "exists",
+        "kind": 2,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "def exists(x):\n    return x is not None\ndef default(val, d):\n    if exists(val):\n        return val\n    return d() if isfunction(d) else d\n# PositionalEncoding Source： https://github.com/lmnt-com/wavegrad/blob/master/src/wavegrad/model.py\nclass PositionalEncoding(nn.Module):\n    def __init__(self, dim):\n        super().__init__()",
+        "detail": "unet",
+        "documentation": {}
+    },
+    {
+        "label": "default",
+        "kind": 2,
+        "importPath": "unet",
+        "description": "unet",
+        "peekOfCode": "def default(val, d):\n    if exists(val):\n        return val\n    return d() if isfunction(d) else d\n# PositionalEncoding Source： https://github.com/lmnt-com/wavegrad/blob/master/src/wavegrad/model.py\nclass PositionalEncoding(nn.Module):\n    def __init__(self, dim):\n        super().__init__()\n        self.dim = dim\n    def forward(self, noise_level):",
+        "detail": "unet",
+        "documentation": {}
+    }
+]
