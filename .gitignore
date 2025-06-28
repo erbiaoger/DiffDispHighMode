@@ -1,8 +1,32 @@
 diffseis/results_demultiple/*
 diffseis/results_denoising/*
-
 diffseis/dataset/demultiple/data_train/*
 diffseis/dataset/denoising/data_train/*
+
+diffseis/results_demultiple_fj/*
+diffseis/results_denoising_fj/*
+diffseis/dataset/demultiple_fj/data_train/*
+diffseis/dataset/denoising_fj/data_train/*
+
+diffseis/results_demultiple_dshift/*
+diffseis/results_denoising_dshift/*
+diffseis/dataset/demultiple_dshift/data_train/*
+diffseis/dataset/denoising_dshift/data_train/*
+
+diffseis/dataset/*
+diffseis/dataset copy/*
+diffseis/dataset_dshift/*
+diffseis/dataset_fj/*
+
+
+Dispersion/dataset_png/*
+Dispersion/datasets_json/*
+Dispersion/save/*
+Dispersion/Test/*
+
+
+
+*.pth
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

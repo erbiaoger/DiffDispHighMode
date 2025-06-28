@@ -8,12 +8,12 @@ import torch
 from torch import nn
 
 mode = "demultiple" #demultiple, interpolation, denoising
-folder = "/csim2/zhangzhiyu/MyProjects/Seismology/diffseis/dataset/"+mode+"/data_train/"
+folder = "dataset/"+mode+"/data_train/"
 image_size = (128,128)
 
 model = UNet(
-        in_channel  = 2, # 4 for demultiple; 3 for data; 1 for label
-        out_channel = 1       # 1 for label
+        in_channel  = 2,        # 4 for demultiple; 3 for data; 1 for label
+        out_channel = 1         # 1 for label
 ).cuda()
 
 # if torch.cuda.device_count() > 1: # 含有多张GPU的卡
@@ -26,7 +26,7 @@ diffusion = GaussianDiffusion(
     channels = 1,
     image_size = image_size,
     timesteps = 2000,
-    loss_type = 'l1', # L1 or L2
+    loss_type = 'l1' # L1 or L2
 ).cuda()
 
 # if torch.cuda.device_count() > 1: # 含有多张GPU的卡

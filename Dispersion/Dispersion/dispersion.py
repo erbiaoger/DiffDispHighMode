@@ -64,7 +64,6 @@ def get_dispersion(traces,dx, dt,cmin,cmax,dc,fmin, fmax):
     # traces.detrend()
     # traces.taper(0.05,type='hann')
     U, f = get_fft(traces, dt, nt)
-    print(U.shape, f.shape, nt, nr)
     #dc = 10.0 # phase velocity increment
     c = np.arange(cmin,cmax,dc) # set phase velocity range
     
@@ -73,8 +72,8 @@ def get_dispersion(traces,dx, dt,cmin,cmax,dc,fmin, fmax):
     fmax_idx = int(fmax//df)
     fmin_idx = int(fmin//df)
     fr = np.arange(fmin, fmax, df)
-    print('Frequency resolution up to %5.2f Hz: %i bins' % (fmax, fmax_idx))
-    print('Phase velocity resolution up to %5.2f m/s: %i bins' % (cmax, len(c)))
+    # print('Frequency resolution up to %5.2f Hz: %i bins' % (fmax, fmax_idx))
+    # print('Phase velocity resolution up to %5.2f m/s: %i bins' % (cmax, len(c)))
     img = np.zeros((len(c),len(fr)))
     x = np.linspace(0.0, (nr-1)*dx, nr)
     for fi in range(len(fr)): # loop over frequency range
