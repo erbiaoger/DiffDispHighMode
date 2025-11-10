@@ -1,3 +1,11 @@
+
+
+label_training/checkpoints_advanced/*
+label_training/checkpoints/*
+
+label_refactor/diffseis/dataset/demultiple/data_train/*
+
+
 diffseis/results_demultiple/*
 diffseis/results_denoising/*
 diffseis/dataset/demultiple/data_train/*
