@@ -11,7 +11,7 @@ from . import dataset, manifest, mask, synth
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate structured dispersion labels")
-    parser.add_argument("--config", type=Path, default=Path("label_refactor/config_example.yaml"))
+    parser.add_argument("--config", type=Path, default=Path("label_refactor/config_sample.yaml"))
     parser.add_argument("--samples", type=int, default=None, help="Override sample count from config")
     parser.add_argument("--seed", type=int, default=None, help="Override RNG seed from config")
     parser.add_argument(
@@ -60,6 +60,7 @@ def main() -> None:
         sample_count=sample_count,
         seed=seed,
         simulation_params=sim_params,
+        augmentation_settings=cfg.augmentation_settings,
     ):
         mask_path = mask_dir / f"{sample.sample_id}.npy"
         mask_path.parent.mkdir(parents=True, exist_ok=True)

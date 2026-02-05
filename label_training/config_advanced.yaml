@@ -10,11 +10,19 @@ training:
   num_workers: 2
   seed: 123
   device: auto
-  model_type: sequence  # "sequence" or "graph"
+  model_type: graph  # "sequence" or "graph"
 dataset:
   auto_generate_masks: true
   blur_sigma: 1.5
   antialiased: false
+  augment:
+    enabled: true
+    gaussian_noise: true
+    noise_std: 0.02
+    cutout: true
+    cutout_freq_fraction: 0.2
+    cutout_vel_fraction: 0.2
+    random_gain: true
 sequence_model:
   in_channels: 1
   mode_count: 3

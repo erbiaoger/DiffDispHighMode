@@ -9,8 +9,7 @@ from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 
-from . import manifest as manifest_utils
-from . import synth
+from . import augment, manifest as manifest_utils, synth
 
 
 @dataclass
@@ -59,7 +58,8 @@ def simulate_dispersion(
     fluctuation_percentage: float,
     rng: np.random.Generator,
     params: synth.SimulationParams,
-) -> Tuple[np.ndarray, np.ndarray]:
+    augmentation_settings: Dict,
+) -> Tuple[np.ndarray, np.ndarray, Dict[str, float]]:
     thickness = np.asarray(layer.thickness_km)
     vs = np.asarray(layer.vs_kms)
     curves, spectrum = synth.simulate_sample(
@@ -72,15 +72,10 @@ def simulate_dispersion(
         rng,
         params,
     )
-    # import matplotlib.pyplot as plt
-    # plt.plot(curves[0, 0], curves[0, 1], 'k', lw=2, label='Mode 0')
-    # plt.plot(curves[1, 0], curves[1, 1], 'r', lw=2, label='Mode 1')
-    # plt.plot(curves[2, 0], curves[2, 1], 'b', lw=2, label='Mode 2')
-    # # plt.plot(frequencies, spectrum[0], 'r', lw=2, label='Resampled')
-    # plt.legend()
-    # plt.savefig('curves.png')
-    # plt.close()
-    return curves, spectrum
+    aug_meta: Dict[str, float] = {}
+    if augmentation_settings:
+        spectrum, aug_meta = augment.augment_spectrum(spectrum, augmentation_settings, rng)
+    return curves, spectrum, aug_meta
 
 
 def save_structured_record(
@@ -139,23 +134,33 @@ def batch_generate(
     sample_count: int,
     seed: int,
     simulation_params: synth.SimulationParams,
+    augmentation_settings: Dict,
 ) -> Iterable[SampleRecord]:
     """High-level orchestration entry point used by cli.py."""
 
     rng = np.random.default_rng(seed)
     records_dir.mkdir(parents=True, exist_ok=True)
 
-    for _ in range(sample_count):
+    generated = 0
+    attempts = 0
+    while generated < sample_count:
+        attempts += 1
         layer = generate_layer_stack(layer_bounds["thickness"], layer_bounds["vs"], layer_count, rng)
-        curves, spectra = simulate_dispersion(
-            layer,
-            frequency_axis,
-            phase_velocity_axis,
-            mode_count,
-            fluctuation_percentage,
-            rng,
-            simulation_params,
-        )
+        try:
+            curves, spectra, aug_meta = simulate_dispersion(
+                layer,
+                frequency_axis,
+                phase_velocity_axis,
+                mode_count,
+                fluctuation_percentage,
+                rng,
+                simulation_params,
+                augmentation_settings,
+            )
+        except Exception as exc:  # pragma: no cover - modelling failures
+            print(f"[warn] simulation failed (attempt {attempts}): {exc}")
+            continue
+
         sample = save_structured_record(
             records_dir,
             layer,
@@ -164,5 +169,8 @@ def batch_generate(
             frequency_axis,
             phase_velocity_axis,
         )
+        if aug_meta:
+            sample.metadata.update({f"aug_{k}": v for k, v in aug_meta.items()})
         append_manifest(manifest_path, sample)
+        generated += 1
         yield sample

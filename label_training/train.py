@@ -53,6 +53,8 @@ def create_dataloaders(cfg: Dict[str, Any]):
     manifest_path = Path(cfg["paths"]["manifest"])
     mask_dir = Path(cfg["paths"]["mask_dir"])
     dataset_cfg = cfg.get("dataset", {})
+    augment_cfg = dataset_cfg.get("augment")
+    val_augment = augment_cfg if dataset_cfg.get("augment_validation", False) else None
     entries = _read_manifest(manifest_path)
     splits = split_manifest(entries, cfg["training"]["val_split"], cfg["training"]["seed"])
     train_ds = DispersionDataset(
@@ -61,6 +63,7 @@ def create_dataloaders(cfg: Dict[str, Any]):
         auto_generate_masks=dataset_cfg.get("auto_generate_masks", True),
         blur_sigma=dataset_cfg.get("blur_sigma", 1.5),
         antialiased=dataset_cfg.get("antialiased", False),
+        augment_cfg=augment_cfg,
     )
     val_ds = DispersionDataset(
         splits.val,
@@ -68,6 +71,7 @@ def create_dataloaders(cfg: Dict[str, Any]):
         auto_generate_masks=dataset_cfg.get("auto_generate_masks", True),
         blur_sigma=dataset_cfg.get("blur_sigma", 1.5),
         antialiased=dataset_cfg.get("antialiased", False),
+        augment_cfg=val_augment,
     )
     train_loader = DataLoader(
         train_ds,

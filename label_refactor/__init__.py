@@ -1,5 +1,5 @@
 """Expose label refactor modules for convenient imports."""
 
-from . import config, dataset, manifest, mask, synth
+from . import augment, config, dataset, manifest, mask, synth
 
-__all__ = ["config", "dataset", "manifest", "mask", "synth"]
+__all__ = ["augment", "config", "dataset", "manifest", "mask", "synth"]

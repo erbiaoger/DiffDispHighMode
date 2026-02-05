@@ -39,6 +39,7 @@ def load_config(path: Path, override: str | None) -> Dict[str, Any]:
 
 def resolve_device(spec: str) -> torch.device:
     if spec == "auto":
+        print("Using auto device, cuda is available: ", torch.cuda.is_available())
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
     return torch.device(spec)
 
@@ -48,13 +49,17 @@ def create_dataloaders(cfg: Dict[str, Any]):
     entries = _read_manifest(manifest_path)
     splits = split_manifest(entries, cfg["training"]["val_split"], cfg["training"]["seed"])
     dataset_kwargs = {
-        "mask_dir": Path(cfg["paths"]["mask_dir"]),
+        "mask_dir"           : Path(cfg["paths"]["mask_dir"]),
         "auto_generate_masks": cfg["dataset"].get("auto_generate_masks", True),
-        "blur_sigma": cfg["dataset"].get("blur_sigma", 1.5),
-        "antialiased": cfg["dataset"].get("antialiased", False),
+        "blur_sigma"         : cfg["dataset"].get("blur_sigma", 1.5),
+        "antialiased"        : cfg["dataset"].get("antialiased", False),
+        "augment_cfg"        : cfg["dataset"].get("augment"),
     }
+    val_kwargs = dict(dataset_kwargs)
+    if not cfg["dataset"].get("augment_validation", False):
+        val_kwargs["augment_cfg"] = None
     train_ds = DispersionCurveDataset(splits.train, **dataset_kwargs)
-    val_ds = DispersionCurveDataset(splits.val, **dataset_kwargs)
+    val_ds = DispersionCurveDataset(splits.val, **val_kwargs)
     loader_kwargs = {
         "batch_size": cfg["training"]["batch_size"],
         "num_workers": cfg["training"].get("num_workers", 0),

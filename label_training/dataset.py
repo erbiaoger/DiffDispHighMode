@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+from .augment import apply_spectrum_augmentation
 from label_refactor import mask as mask_utils
 
 
@@ -58,12 +59,14 @@ class DispersionDataset(Dataset):
         auto_generate_masks: bool = True,
         blur_sigma: float = 1.5,
         antialiased: bool = False,
+        augment_cfg: Dict | None = None,
     ):
         self.entries = list(entries)
         self.mask_dir = Path(mask_dir)
         self.auto_generate_masks = auto_generate_masks
         self.blur_sigma = blur_sigma
         self.antialiased = antialiased
+        self.augment_cfg = augment_cfg or {}
         self.mask_dir.mkdir(parents=True, exist_ok=True)
 
     def __len__(self) -> int:
@@ -106,7 +109,9 @@ class DispersionDataset(Dataset):
     def __getitem__(self, idx: int) -> Tuple[torch.Tensor, torch.Tensor]:
         entry = self.entries[idx]
         spectrum_raw, curves, freq, phase_vel = self._load_record(entry)
-        spectrum = torch.from_numpy(self._normalize_spectrum(spectrum_raw))
+        spectrum_np = self._normalize_spectrum(spectrum_raw)
+        spectrum = torch.from_numpy(spectrum_np)
+        spectrum = apply_spectrum_augmentation(spectrum, self.augment_cfg)
         mask_np = self._materialize_mask(entry, curves, freq, phase_vel)
         mask = torch.from_numpy(mask_np)
         return spectrum, mask

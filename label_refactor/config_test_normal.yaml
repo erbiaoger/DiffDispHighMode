@@ -1,0 +1,55 @@
+# Test set configuration – nominal spectra without extra interference
+frequency:
+  min_hz: 3.0
+  max_hz: 30.0
+  num_samples: 101
+
+phase_velocity:
+  min_ms: 100.0
+  max_ms: 900.0
+  num_samples: 256
+
+simulation:
+  nt: 600
+  dt: 0.008
+  nx: 201
+  dx: 2.0
+  nfft: 1024
+
+physics:
+  modes: 3
+  layer_count: 5
+  fluctuation_percentage: 0.2
+  vs_bounds_kms: [0.1, 1.1]
+  thickness_bounds_km: [0.005, 0.07]
+
+paths:
+  output_root: diffseis/dataset/demultiple/data_test
+  spectra_subdir: spectra
+  curves_subdir: curves
+  mask_subdir: masks
+  manifest_path: label_refactor/manifests/labels_test.jsonl
+
+mask:
+  channel_count: 3
+  blur_sigma_px: 1.5
+  antialiased: true
+
+augmentation:
+  noise:
+    enabled: false
+    snr_db: 25.0
+  occlusion:
+    enabled: false
+    max_patches: 4
+    max_freq_fraction: 0.2
+    max_vel_fraction: 0.2
+    attenuation: 0.2
+  warp:
+    enabled: false
+    max_freq_shift: 1.0
+    max_vel_shift: 1.0
+
+cli:
+  dry_run_samples: 800
+  seed: 4242

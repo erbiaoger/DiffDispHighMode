@@ -7,6 +7,14 @@ dataset:
   auto_generate_masks: true
   blur_sigma: 1.5
   antialiased: false
+  augment:
+    enabled: true
+    gaussian_noise: true
+    noise_std: 0.02
+    cutout: true
+    cutout_freq_fraction: 0.15
+    cutout_vel_fraction: 0.15
+    random_gain: true
 training:
   epochs: 50
   batch_size: 2

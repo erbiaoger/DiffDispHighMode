@@ -5,13 +5,14 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 import numpy as np
 import torch
 from torch.utils.data import Dataset
 
 from label_refactor import mask as mask_utils
+from .augment import apply_spectrum_augmentation
 
 
 @dataclass
@@ -51,12 +52,14 @@ class DispersionCurveDataset(Dataset):
         auto_generate_masks: bool = True,
         blur_sigma: float = 1.5,
         antialiased: bool = False,
+        augment_cfg: Dict | None = None,
     ):
         self.entries = list(entries)
         self.mask_dir = Path(mask_dir)
         self.auto_generate_masks = auto_generate_masks
         self.blur_sigma = blur_sigma
         self.antialiased = antialiased
+        self.augment_cfg = augment_cfg or {}
         self.mask_dir.mkdir(parents=True, exist_ok=True)
 
     def __len__(self) -> int:
@@ -100,9 +103,12 @@ class DispersionCurveDataset(Dataset):
         mask = self._ensure_mask(entry, curves, freq, phase_vel)
         # curves array shape (modes, 2, freq). Extract velocities component.
         velocities = curves[:, 1]
+        spectrum_tensor = torch.from_numpy(self._normalize_spectrum(spectrum))
+        spectrum_tensor = apply_spectrum_augmentation(spectrum_tensor, self.augment_cfg)
         return {
-            "entry": entry,
-            "spectrum": torch.from_numpy(self._normalize_spectrum(spectrum)),
+            "entry_id": entry.get("id"),
+            "npz": entry.get("npz"),
+            "spectrum": spectrum_tensor,
             "mask": torch.from_numpy(mask),
             "velocities": torch.from_numpy(velocities),
             "freq": torch.from_numpy(freq),

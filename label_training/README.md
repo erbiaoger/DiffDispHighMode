@@ -7,6 +7,7 @@ This package turns the structured curves/masks emitted by `label_refactor` into 
 - `config_example.yaml` — wiring between manifests, mask directories, and hyperparameters.
 - `dataset.py` — `torch.utils.data.Dataset` that pairs `.npz` spectra with `.npy` masks and handles train/val splits.
 - `dataset.py` can auto-generate masks on the fly if a stored `.npy` is missing (enabled via `dataset.auto_generate_masks`).
+- `augment.py` applies optional spectrum-level noise/cutout/gain augmentations inside the PyTorch datasets.
 - `model.py` — small UNet-style encoder/decoder suitable for 2D spectral masks.
 - `train.py` — CLI entry point that runs training plus validation, saving the best checkpoint under `output.checkpoint_dir`.
 - `validate.py` — loads a trained checkpoint, runs inference on random samples, and overlays picked curves on the spectra for qualitative review.
@@ -30,6 +31,7 @@ Make sure you have already generated data with `label_refactor.cli`, since the t
    - Training/validation splits are derived from the manifest using the `training.val_split` ratio.
    - Checkpoints land under `label_training/checkpoints` by default, with `best.pt` storing the lowest validation loss model and `last.pt` capturing the latest epoch.
 3. Adjust hyperparameters (epochs, learning rate, number of channels) inside the YAML and re-run. Set `training.device` to `cuda` if you have a GPU available. If you toggle `dataset.auto_generate_masks` to `false`, be sure masks exist on disk beforehand.
+   - Fine-tune `dataset.augment` to control loader-time perturbations (noise, cutout, random gain).
 
 ### Post-training validation
 
@@ -65,3 +67,11 @@ python -m label_training.validate_advanced --config label_training/config_advanc
 ```
 
 Images are written to `label_training/validation_plots_advanced/` (configurable via `--output-dir`).
+
+To validate on the mixed test manifest generated via `label_refactor/config_test_normal.yaml` + `config_test_interference.yaml`, point the validator at that manifest without editing your training config:
+
+```bash
+python -m label_training.validate_advanced --config label_training/config_advanced.yaml \
+       --checkpoint label_training/checkpoints_advanced/advanced_best.pt \
+       --manifest label_refactor/manifests/labels_test.jsonl --samples 4
+```

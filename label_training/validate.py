@@ -94,6 +94,7 @@ def main() -> None:
         auto_generate_masks=dataset_cfg.get("auto_generate_masks", True),
         blur_sigma=dataset_cfg.get("blur_sigma", 1.5),
         antialiased=dataset_cfg.get("antialiased", False),
+        augment_cfg=None,
     )
 
     rng = np.random.default_rng(cfg["training"].get("seed", 123))

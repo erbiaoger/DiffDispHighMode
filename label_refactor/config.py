@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
 import yaml
@@ -102,6 +102,22 @@ class CLIConfig:
 
 
 @dataclass
+class AugmentationConfig:
+    noise: Dict[str, Any]
+    occlusion: Dict[str, Any]
+    warp: Dict[str, Any]
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "AugmentationConfig":
+        data = data or {}
+        return cls(
+            noise=data.get("noise", {}),
+            occlusion=data.get("occlusion", {}),
+            warp=data.get("warp", {}),
+        )
+
+
+@dataclass
 class Config:
     frequency     : FrequencyConfig
     phase_velocity: PhaseVelocityConfig
@@ -110,6 +126,7 @@ class Config:
     paths         : PathsConfig
     mask          : MaskConfig
     cli           : CLIConfig
+    augmentation  : AugmentationConfig
 
     @classmethod
     def from_file(cls, path: Path) -> "Config":
@@ -123,6 +140,7 @@ class Config:
             paths=PathsConfig.from_dict(base_dir, data["paths"]),
             mask=MaskConfig(**data["mask"]),
             cli=CLIConfig(**data["cli"]),
+            augmentation=AugmentationConfig.from_dict(data.get("augmentation", {})),
         )
 
     @property
@@ -136,3 +154,11 @@ class Config:
     @property
     def layer_bounds(self) -> Dict[str, Tuple[float, float]]:
         return self.physics.layer_bounds
+
+    @property
+    def augmentation_settings(self) -> Dict[str, Any]:
+        return {
+            "noise": self.augmentation.noise,
+            "occlusion": self.augmentation.occlusion,
+            "warp": self.augmentation.warp,
+        }

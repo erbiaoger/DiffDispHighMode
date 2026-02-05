@@ -24,6 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--samples", type=int, default=4)
     parser.add_argument("--output-dir", type=Path, default=Path("label_training/validation_plots_advanced"))
     parser.add_argument("--override", type=str, default=None)
+    parser.add_argument("--manifest", type=Path, default=None, help="Override manifest path (e.g., for test sets)")
     return parser.parse_args()
 
 
@@ -95,6 +96,8 @@ def main() -> None:
     args = parse_args()
     cfg, overrides = load_config(args.config, args.override)
     device = resolve_device(cfg["training"].get("device", "auto"))
+    if args.manifest is not None:
+        cfg.setdefault("paths", {})["manifest"] = args.manifest.as_posix()
 
     checkpoint = torch.load(args.checkpoint, map_location=device)
     ckpt_cfg = checkpoint.get("config", {})
@@ -117,6 +120,7 @@ def main() -> None:
         "auto_generate_masks": cfg["dataset"].get("auto_generate_masks", True),
         "blur_sigma": cfg["dataset"].get("blur_sigma", 1.5),
         "antialiased": cfg["dataset"].get("antialiased", False),
+        "augment_cfg": None,
     }
     dataset = DispersionCurveDataset(splits.val, **dataset_kwargs)
 
@@ -125,7 +129,7 @@ def main() -> None:
 
     for idx in indices:
         sample = dataset[idx]
-        entry = sample["entry"]
+        entry = dataset.entries[idx]
         spectrum = sample["spectrum"].unsqueeze(0).to(device)
         with torch.no_grad():
             outputs = model(spectrum)
