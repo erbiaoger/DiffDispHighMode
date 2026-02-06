@@ -1,0 +1,13 @@
+name: diffdisp
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip
+  - numpy
+  - scipy
+  - matplotlib
+  - pip:
+      - torch
+      - torchvision
+      - disba
