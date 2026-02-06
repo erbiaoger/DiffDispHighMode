@@ -175,6 +175,19 @@ def _period_curve_to_f_axis(curve_kp_ms: np.ndarray, periods_s_inc: np.ndarray, 
     return out
 
 
+def _fill_nan_1d(x: np.ndarray, xp: np.ndarray) -> np.ndarray:
+    """Fill NaNs in x by linear interpolation over xp (assumed increasing)."""
+    x = np.asarray(x, dtype=np.float32)
+    xp = np.asarray(xp, dtype=np.float32)
+    mask = np.isfinite(x)
+    if not np.any(mask):
+        return x
+    if np.sum(mask) == 1:
+        return np.full_like(x, x[mask][0], dtype=np.float32)
+    filled = np.interp(xp, xp[mask], x[mask]).astype(np.float32)
+    return filled
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=str, required=True, help="output dataset root, e.g. data/demultiple/npz")
@@ -289,6 +302,10 @@ def main() -> None:
             # We use the same period grid, convert to fdisp (increasing).
             fdisp_inc = np.flipud(1.0 / (periods_inc + 1e-12)).astype(np.float32)
             vdisp_km_s_inc = (np.flipud(curve_kp_ms[k]) / 1e3).astype(np.float32)
+            vdisp_km_s_inc = _fill_nan_1d(vdisp_km_s_inc, fdisp_inc)
+            vdisp_km_s_inc = np.maximum(vdisp_km_s_inc, 0.05).astype(np.float32)
+            if not np.all(np.isfinite(vdisp_km_s_inc)):
+                continue
             modes_fdisp.append(fdisp_inc)
             modes_vdisp.append(vdisp_km_s_inc)
             mode_weights.append(1.0 / float((k + 1) ** 0.8))
@@ -319,6 +336,17 @@ def main() -> None:
             wav=wav,
             mode_weights=mode_weights,
         )
+        if not np.all(np.isfinite(d_clean)):
+            # Rarely, synthesis can blow up if vf contains zeros/NaNs. Skip this sample.
+            save_sample_npz(
+                (train_dir if split == "train" else val_dir) / f"sample_{idx:06d}.npz",
+                E_clean=np.zeros((args.F, args.C), dtype=np.float32),
+                E_noisy=np.zeros((args.F, args.C), dtype=np.float32),
+                Y_curve_fc=Y_curve_fc,
+                mode_mask=mode_mask,
+                meta={"error": "nonfinite_synth"},
+            )
+            return
 
         d_noisy, rec_meta = apply_record_randomization(d_clean, dt_s=args.dt, dx_m=args.dx, rng=rng, cfg=rec_aug_cfg)
 

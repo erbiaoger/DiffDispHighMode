@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate synthetic dispersion energy images and labels.
+"""Generate synthetic dispersion energy images and labels (Park method).
 
 Outputs:
   data/<mode>/data_train/data/*.png
@@ -31,7 +31,6 @@ from disba import PhaseDispersion  # noqa: E402
 from Dispersion.surfacewaves import ormsby, surfacewavedata  # noqa: E402
 from Dispersion.Dispersion.dispersion import get_dispersion  # noqa: E402
 import scipy  # noqa: E402
-import ccfj  # noqa: E402
 
 
 def get_cpr(thick_km, vs_km_s, periods):
@@ -78,15 +77,6 @@ def park_dispersion(dshift, dx, dt, cmin, cmax, dc, fmin, fmax):
     return f1, c1, img
 
 
-def fj_dispersion(dshift, dx, dt, cmin, cmax):
-    nx, nt = dshift.shape
-    x = np.arange(nx) * dx
-    f = scipy.fftpack.fftfreq(nt, dt)[: nt // 2]
-    c = np.linspace(cmin, cmax, 1000)
-    out = ccfj.fj_earthquake(dshift, x, c, f, fstride=1, itype=0, func=0)
-    return f, c, out
-
-
 def save_energy_image(path, f, c, img, fmin, fmax):
     fig = plt.figure()
     ax = fig.add_axes([0, 0, 1, 1])
@@ -130,7 +120,6 @@ def main():
     parser = argparse.ArgumentParser(description="Generate dispersion energy images and labels.")
     parser.add_argument("--out", type=str, default=str(PROJECT_ROOT / "data"), help="output root")
     parser.add_argument("--mode", type=str, default="demultiple", help="dataset mode name")
-    parser.add_argument("--method", type=str, default="park", choices=["park", "fj"], help="energy method")
     parser.add_argument("--num", type=int, default=200, help="number of samples")
     parser.add_argument("--seed", type=int, default=1234)
 
@@ -191,10 +180,7 @@ def main():
         cpr = get_cpr(thick, vs, periods)
         dshift = synth_dshift(args.nt, args.dt, args.nx, args.dx, args.nfft, cpr)
 
-        if args.method == "park":
-            f, c, img = park_dispersion(dshift, args.dx, args.dt, args.cmin, args.cmax, args.dc, args.fmin, args.fmax)
-        else:
-            f, c, img = fj_dispersion(dshift, args.dx, args.dt, args.cmin, args.cmax)
+        f, c, img = park_dispersion(dshift, args.dx, args.dt, args.cmin, args.cmax, args.dc, args.fmin, args.fmax)
 
         name = f"{idx:06d}.png"
         save_energy_image(data_dir / name, f, c, img, args.fmin, args.fmax)

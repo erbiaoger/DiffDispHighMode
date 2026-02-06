@@ -67,6 +67,8 @@ def surfacewavedata(
 
     f = np.fft.rfftfreq(nfft, float(dt)).astype(np.float32)
     vf = np.interp(f, fdisp.astype(np.float32), vdisp_km_s.astype(np.float32)).astype(np.float32)
+    # Protect against division blowups in time shifts (vf is in km/s).
+    vf = np.maximum(vf, 0.05).astype(np.float32)
 
     data = np.outer(wav.astype(np.float32), np.ones(nx, dtype=np.float32)).T  # [nx, wavlen]
     D = np.fft.rfft(data, n=nfft, axis=1)  # [nx, nf]
@@ -103,4 +105,3 @@ def multi_mode_gather(
         w = float(mode_weights[k])
         acc = dshift * w if acc is None else acc + dshift * w
     return acc.astype(np.float32)
-

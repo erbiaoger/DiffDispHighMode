@@ -49,12 +49,18 @@ def main() -> None:
     ap.add_argument("--val-samples", type=int, default=64)
 
     ap.add_argument("--K-max", type=int, default=5)
-    ap.add_argument("--sigma-px", type=float, default=3.0)
+    ap.add_argument("--sigma-px", type=float, default=5.0)
     ap.add_argument("--norm", type=str, default="log1p_minmax")
 
     ap.add_argument("--bce-weight", type=float, default=1.0)
     ap.add_argument("--dice-weight", type=float, default=0.5)
     ap.add_argument("--hit-tol", type=float, default=20.0)
+    ap.add_argument("--dp-max-jump", type=int, default=10)
+    ap.add_argument("--dp-lambda-smooth", type=float, default=1.0)
+    ap.add_argument("--dp-const-null", type=float, default=2.0)
+    ap.add_argument("--dp-null-entry", type=float, default=0.5)
+    ap.add_argument("--dp-null-exit", type=float, default=0.5)
+    ap.add_argument("--dp-null-stay", type=float, default=0.0)
 
     ap.add_argument("--denoiser-ckpt", type=str, default="", help="optional denoiser checkpoint (.pt)")
     args = ap.parse_args()
@@ -125,13 +131,28 @@ def main() -> None:
         "K_max": args.K_max,
         "sigma_px": args.sigma_px,
         "denoiser_ckpt": args.denoiser_ckpt,
+        "dp": {
+            "max_jump": args.dp_max_jump,
+            "lambda_smooth": args.dp_lambda_smooth,
+            "const_null": args.dp_const_null,
+            "null_entry": args.dp_null_entry,
+            "null_exit": args.dp_null_exit,
+            "null_stay": args.dp_null_stay,
+        },
     }
     (out_root / "config.json").write_text(json.dumps(cfg_dump, indent=2) + "\n", encoding="utf-8")
 
     grid = train_ds.grid
     c_axis = grid.c_axis()
 
-    path_cfg = PathConfig(max_jump=10, lambda_smooth=1.0, const_null=2.0)
+    path_cfg = PathConfig(
+        max_jump=args.dp_max_jump,
+        lambda_smooth=args.dp_lambda_smooth,
+        const_null=args.dp_const_null,
+        null_entry=args.dp_null_entry,
+        null_exit=args.dp_null_exit,
+        null_stay=args.dp_null_stay,
+    )
     metrics_cfg = MetricsConfig(hit_tol_ms=float(args.hit_tol))
 
     train_iter = iter(train_loader)
