@@ -1,0 +1,43 @@
+paths:
+  manifest: label_refactor/manifests/labels.jsonl
+  mask_dir: diffseis/dataset/demultiple/data_train/masks
+  checkpoint_dir: label_training/checkpoints_advanced
+training:
+  epochs: 200
+  batch_size: 2
+  val_split: 0.2
+  lr: 0.0003
+  num_workers: 2
+  seed: 123
+  device: auto
+  model_type: graph  # "sequence" or "graph"
+dataset:
+  auto_generate_masks: true
+  blur_sigma: 1.5
+  antialiased: false
+  augment:
+    enabled: true
+    gaussian_noise: true
+    noise_std: 0.02
+    cutout: true
+    cutout_freq_fraction: 0.2
+    cutout_vel_fraction: 0.2
+    random_gain: true
+sequence_model:
+  in_channels: 1
+  mode_count: 3
+  hidden_dim: 256
+  transformer_layers: 4
+  transformer_heads: 4
+  lstm_layers: 2
+  dropout: 0.1
+  smooth_lambda: 0.01
+graph_model:
+  in_channels: 1
+  mode_count: 3
+  base_channels: 32
+  depth: 4
+  temperature: 1.0
+loss:
+  curve_weight: 1.0
+  mask_weight: 1.0

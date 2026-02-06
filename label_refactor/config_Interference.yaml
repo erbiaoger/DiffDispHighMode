@@ -1,0 +1,65 @@
+# 频率参数设置
+frequency:
+  min_hz: 3.0          # 最小频率（Hz）
+  max_hz: 30.0         # 最大频率（Hz）
+  num_samples: 101     # 频率采样点数
+
+# 相速度参数设置
+phase_velocity:
+  min_ms: 100.0        # 最小相速度（m/s）
+  max_ms: 900.0        # 最大相速度（m/s）
+  num_samples: 256     # 相速度采样点数
+
+# 仿真参数设置
+simulation:
+  nt: 600              # 时间采样点数
+  dt: 0.008            # 时间采样间隔（秒）
+  nx: 201              # 空间采样点数
+  dx: 2.0              # 空间采样间隔（米）
+  nfft: 1024           # FFT点数
+
+# 物理参数设置
+physics:
+  modes: 3                            # 模态数
+  layer_count: 5                      # 层数
+  fluctuation_percentage: 0.2         # 波动百分比
+  vs_bounds_kms: [0.1, 1.1]           # 横波速度范围（km/s）[最小值, 最大值]
+  thickness_bounds_km: [0.005, 0.07]  # 厚度范围（km）[最小值, 最大值]
+
+# 路径参数设置
+paths:
+  output_root: diffseis/dataset/demultiple/data_train   # 输出根目录
+  spectra_subdir: spectra                               # 频谱子目录
+  curves_subdir: curves                                 # 曲线子目录
+  mask_subdir: masks                                    # 掩码子目录
+  manifest_path: manifests/labels.jsonl                 # 清单文件路径
+
+# 掩码参数设置
+mask:
+  channel_count: 3     # 通道数
+  blur_sigma_px: 1.5   # 模糊sigma（像素）
+  antialiased: true    # 是否启用抗锯齿
+
+# 数据增强参数设置
+augmentation:
+  # 噪声增强
+  noise:
+    enabled: true      # 是否启用噪声增强
+    snr_db: 25.0       # 信噪比（dB）
+  # 遮挡增强
+  occlusion:
+    enabled: true             # 是否启用遮挡增强
+    max_patches: 4            # 最大补丁数
+    max_freq_fraction: 0.2    # 最大频率分数
+    max_vel_fraction: 0.2     # 最大速度分数
+    attenuation: 0.2          # 衰减系数
+  # 扭曲增强
+  warp:
+    enabled: false          # 是否启用扭曲增强
+    max_freq_shift: 1.0     # 最大频率偏移（Hz）
+    max_vel_shift: 1.0      # 最大速度偏移（m/s）
+
+# 命令行接口参数设置
+cli:
+  dry_run_samples: 500  # dry run 测试样本数（默认500）
+  seed: 42              # 随机种子
