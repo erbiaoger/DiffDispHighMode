@@ -117,6 +117,10 @@ def main() -> None:
             logits = picker(x)[0].detach().cpu().numpy().astype(np.float32)
         P = 1.0 / (1.0 + np.exp(-logits))
 
+        # Guard against mismatched C between meta and model output
+        if len(c_axis) != P.shape[2]:
+            c_axis = np.linspace(grid.cmin_ms, grid.cmax_ms, P.shape[2], dtype=np.float32)
+
         path_cfg = PathConfig(max_jump=10, lambda_smooth=1.0, const_null=2.0)
         pred_curves = []
         for k in range(args.K_max):

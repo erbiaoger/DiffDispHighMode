@@ -17,6 +17,20 @@ class PathConfig:
     null_stay: float = 0.0
 
 
+def _align_c_axis(c_axis_ms: np.ndarray, C: int) -> np.ndarray:
+    c = np.asarray(c_axis_ms, dtype=np.float32).reshape(-1)
+    if c.size == C:
+        return c
+    if c.size == 0:
+        return np.linspace(0.0, float(C - 1), C, dtype=np.float32)
+    cmin = float(np.nanmin(c))
+    cmax = float(np.nanmax(c))
+    if not np.isfinite(cmin) or not np.isfinite(cmax) or cmin == cmax:
+        cmin = 0.0
+        cmax = float(C - 1)
+    return np.linspace(cmin, cmax, C, dtype=np.float32)
+
+
 def extract_curve_dp(
     P_fc: np.ndarray,
     c_axis_ms: np.ndarray,
@@ -34,6 +48,7 @@ def extract_curve_dp(
     if P.ndim != 2:
         raise ValueError(f"P_fc must be [F,C], got {P.shape}")
     F, C = P.shape
+    c_axis = _align_c_axis(c_axis_ms, C)
 
     logp = -np.log(np.clip(P, cfg.eps, 1.0))
     cost_obs = logp  # [F,C]
@@ -101,7 +116,7 @@ def extract_curve_dp(
 
     curve = np.full((F,), np.nan, dtype=np.float32)
     valid = path >= 0
-    curve[valid] = np.asarray(c_axis_ms, dtype=np.float32)[path[valid]]
+    curve[valid] = c_axis[path[valid]]
     return curve, path
 
 
@@ -123,7 +138,8 @@ def extract_curve_softargmax(
     P = np.asarray(P_fc, dtype=np.float32)
     if P.ndim != 2:
         raise ValueError(f"P_fc must be [F,C], got {P.shape}")
-    c_axis = np.asarray(c_axis_ms, dtype=np.float32)
+    F, C = P.shape
+    c_axis = _align_c_axis(c_axis_ms, C)
     W = np.clip(P, 0.0, 1.0) ** float(power)
     denom = np.sum(W, axis=1, keepdims=True) + eps
     curve = (W @ c_axis) / denom[:, 0]

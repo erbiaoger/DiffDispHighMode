@@ -79,7 +79,7 @@ def main() -> None:
             raise SystemExit("--dataset-root is required when using --input-npz (to get grid axes)")
         grid = GridSpec.from_dict(meta["grid"])
         f_axis = grid.f_axis()
-        c_axis = grid.c_axis()
+    c_axis = grid.c_axis()
         x = s["E_noisy"]
         from diffdisp.normalize import normalize_energy
 
@@ -90,6 +90,8 @@ def main() -> None:
                 xt = denoiser(xt).clamp_(0.0, 1.0)
             logits = picker(xt)[0].detach().cpu().numpy()
         P = 1.0 / (1.0 + np.exp(-logits))
+        if len(c_axis) != P.shape[1]:
+            c_axis = np.linspace(grid.cmin_ms, grid.cmax_ms, P.shape[1], dtype=np.float32)
         curves = []
         for k in range(args.K_max):
             if args.decode == "softargmax":
@@ -125,6 +127,8 @@ def main() -> None:
                     xt = denoiser(xt).clamp_(0.0, 1.0)
                 logits = picker(xt)[0].detach().cpu().numpy()
             P = 1.0 / (1.0 + np.exp(-logits))
+            if len(c_axis) != P.shape[1]:
+                c_axis = np.linspace(grid.cmin_ms, grid.cmax_ms, P.shape[1], dtype=np.float32)
             curves = []
             for k in range(args.K_max):
                 if args.decode == "softargmax":
