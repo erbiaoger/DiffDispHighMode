@@ -197,7 +197,7 @@ def main() -> None:
     ap.add_argument("--overwrite", action="store_true", help="delete existing split folders before writing")
 
     ap.add_argument("--F", type=int, default=256)
-    ap.add_argument("--C", type=int, default=256)
+    ap.add_argument("--C", type=int, default=512)
     ap.add_argument("--fmin", type=float, default=3.0)
     ap.add_argument("--fmax", type=float, default=12.0)
     ap.add_argument("--cmin", type=float, default=100.0)

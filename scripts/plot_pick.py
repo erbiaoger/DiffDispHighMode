@@ -42,6 +42,8 @@ def main() -> None:
     ap.add_argument("--norm", type=str, default="log1p_minmax")
     ap.add_argument("--use-clean", action="store_true", help="plot E_clean instead of E_noisy")
     ap.add_argument("--plot-norm", action="store_true", help="plot normalized energy instead of raw log1p")
+    ap.add_argument("--decode", type=str, default="dp", choices=["dp", "softargmax"])
+    ap.add_argument("--softargmax-power", type=float, default=1.0)
     args = ap.parse_args()
 
     torch = _require_torch()
@@ -50,7 +52,7 @@ def main() -> None:
     from diffdisp.io import load_sample_npz
     from diffdisp.models import UNet2D
     from diffdisp.normalize import NormConfig, normalize_energy
-    from diffdisp.path import PathConfig, extract_curve_dp
+    from diffdisp.path import PathConfig, extract_curve_dp, extract_curve_softargmax
 
     out_root = Path(args.out)
     out_root.mkdir(parents=True, exist_ok=True)
@@ -73,24 +75,7 @@ def main() -> None:
             raise SystemExit("--input-npz is required unless --random is set")
         input_paths = [Path(args.input_npz)]
 
-    for input_path in input_paths:
-        sample = load_sample_npz(input_path)
-        E = sample["E_clean"] if args.use_clean else sample["E_noisy"]
-    # Model input normalization
-    E_norm = normalize_energy(E, NormConfig(kind=args.norm))
-    # Plotting: use log1p + robust stretch, or normalized if requested
-    if args.plot_norm:
-        E_plot = E_norm.astype(np.float32)
-    else:
-        E_plot = np.log1p(np.maximum(E, 0.0)).astype(np.float32)
-    E_plot = np.nan_to_num(E_plot, nan=0.0, posinf=0.0, neginf=0.0)
-    mask = E_plot > 0
-    if np.any(mask):
-        vmin = np.percentile(E_plot[mask], 2)
-        vmax = np.percentile(E_plot[mask], 98)
-    else:
-        vmin, vmax = float(np.min(E_plot)), float(np.max(E_plot) + 1e-6)
-
+    # Load models once outside the loop
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     picker_ckpt = torch.load(args.picker_ckpt, map_location="cpu")
     picker = UNet2D(in_ch=1, out_ch=args.K_max, base=32)
@@ -104,6 +89,26 @@ def main() -> None:
         denoiser.load_state_dict(den_ckpt["state_dict"])
         denoiser.to(device).eval()
 
+    for input_path in input_paths:
+        sample = load_sample_npz(input_path)
+        E = sample["E_clean"] if args.use_clean else sample["E_noisy"]
+
+        # Model input normalization
+        E_norm = normalize_energy(E, NormConfig(kind=args.norm))
+        # Plotting: use log1p + robust stretch, or normalized if requested
+        if args.plot_norm:
+            E_plot = E_norm.astype(np.float32)
+        else:
+            E_plot = np.log1p(np.maximum(E, 0.0)).astype(np.float32)
+        E_plot = np.nan_to_num(E_plot, nan=0.0, posinf=0.0, neginf=0.0)
+        mask = E_plot > 0
+        if np.any(mask):
+            vmin = np.percentile(E_plot[mask], 2)
+            vmax = np.percentile(E_plot[mask], 98)
+        else:
+            vmin, vmax = float(np.min(E_plot)), float(np.max(E_plot) + 1e-6)
+
+        # Inference
         x = torch.from_numpy(E_norm[None, None, :, :].astype(np.float32)).to(device)
         with torch.no_grad():
             if denoiser is not None:
@@ -114,12 +119,16 @@ def main() -> None:
         path_cfg = PathConfig(max_jump=10, lambda_smooth=1.0, const_null=2.0)
         pred_curves = []
         for k in range(args.K_max):
-            curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
+            if args.decode == "softargmax":
+                curve = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+            else:
+                curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
             pred_curves.append(curve)
 
         gt_curves = sample["Y_curve_fc"][: args.K_max]
         gt_mask = sample["mode_mask"][: args.K_max]
 
+        # Plot
         fig, ax = plt.subplots(figsize=(7, 5), dpi=150)
         ax.imshow(
             E_plot.T,

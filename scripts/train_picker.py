@@ -55,7 +55,7 @@ def main() -> None:
     ap.add_argument("--bce-weight", type=float, default=1.0)
     ap.add_argument("--dice-weight", type=float, default=0.5)
     ap.add_argument("--hit-tol", type=float, default=20.0)
-    ap.add_argument("--dp-max-jump", type=int, default=10)
+    ap.add_argument("--dp-max-jump", type=int, default=10)  # 最大跳跃次数
     ap.add_argument("--dp-lambda-smooth", type=float, default=1.0)
     ap.add_argument("--dp-const-null", type=float, default=2.0)
     ap.add_argument("--dp-null-entry", type=float, default=0.5)

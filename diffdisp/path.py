@@ -104,3 +104,26 @@ def extract_curve_dp(
     curve[valid] = np.asarray(c_axis_ms, dtype=np.float32)[path[valid]]
     return curve, path
 
+
+def extract_curve_softargmax(
+    P_fc: np.ndarray,
+    c_axis_ms: np.ndarray,
+    power: float = 1.0,
+    eps: float = 1e-8,
+) -> np.ndarray:
+    """Continuous curve via soft-argmax on probability map.
+
+    Args:
+      P_fc: [F, C] probabilities in [0, 1]
+      power: sharpening factor; >1 makes peaks sharper
+    Returns:
+      curve_f: [F] in m/s
+    """
+    P = np.asarray(P_fc, dtype=np.float32)
+    if P.ndim != 2:
+        raise ValueError(f"P_fc must be [F,C], got {P.shape}")
+    c_axis = np.asarray(c_axis_ms, dtype=np.float32)
+    W = np.clip(P, 0.0, 1.0) ** float(power)
+    denom = np.sum(W, axis=1, keepdims=True) + eps
+    curve = (W @ c_axis) / denom[:, 0]
+    return curve.astype(np.float32)

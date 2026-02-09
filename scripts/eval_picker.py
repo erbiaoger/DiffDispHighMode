@@ -37,6 +37,8 @@ def main() -> None:
     ap.add_argument("--K-max", type=int, default=5)
     ap.add_argument("--norm", type=str, default="log1p_minmax")
     ap.add_argument("--hit-tol", type=float, default=20.0)
+    ap.add_argument("--decode", type=str, default="dp", choices=["dp", "softargmax"])
+    ap.add_argument("--softargmax-power", type=float, default=1.0)
     args = ap.parse_args()
 
     torch = _require_torch()
@@ -44,7 +46,7 @@ def main() -> None:
     from diffdisp.data import DatasetConfig, NPZDispersionDataset
     from diffdisp.models import UNet2D
     from diffdisp.normalize import NormConfig
-    from diffdisp.path import PathConfig, extract_curve_dp
+    from diffdisp.path import PathConfig, extract_curve_dp, extract_curve_softargmax
     from diffdisp.metrics import MetricsConfig, compute_metrics_for_matched, match_modes_mae
 
     out_root = Path(args.out)
@@ -94,7 +96,10 @@ def main() -> None:
             P = 1.0 / (1.0 + np.exp(-logits))
             pred_curves = np.full((args.K_max, ds.grid.F), np.nan, dtype=np.float32)
             for k in range(args.K_max):
-                pred_curves[k], _ = extract_curve_dp(P[k], c_axis, path_cfg)
+                if args.decode == "softargmax":
+                    pred_curves[k] = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+                else:
+                    pred_curves[k], _ = extract_curve_dp(P[k], c_axis, path_cfg)
 
             gt_curves = b["curve"].detach().cpu().numpy().astype(np.float32)[: args.K_max]
             gt_mask = b["mode_mask"].detach().cpu().numpy().astype(np.uint8)[: args.K_max]

@@ -37,6 +37,8 @@ def main() -> None:
     ap.add_argument("--device", type=str, default="cuda")
     ap.add_argument("--K-max", type=int, default=5)
     ap.add_argument("--norm", type=str, default="log1p_minmax")
+    ap.add_argument("--decode", type=str, default="dp", choices=["dp", "softargmax"])
+    ap.add_argument("--softargmax-power", type=float, default=1.0)
     args = ap.parse_args()
 
     torch = _require_torch()
@@ -44,7 +46,7 @@ def main() -> None:
     from diffdisp.data import DatasetConfig, NPZDispersionDataset, load_meta
     from diffdisp.models import UNet2D
     from diffdisp.normalize import NormConfig
-    from diffdisp.path import PathConfig, extract_curve_dp
+    from diffdisp.path import PathConfig, extract_curve_dp, extract_curve_softargmax
     from diffdisp.io import load_sample_npz
     from diffdisp.axes import GridSpec
 
@@ -89,7 +91,10 @@ def main() -> None:
         P = 1.0 / (1.0 + np.exp(-logits))
         curves = []
         for k in range(args.K_max):
-            curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
+            if args.decode == "softargmax":
+                curve = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+            else:
+                curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
             curves.append(curve.tolist())
         rec = {"file": str(args.input_npz), "curves_ms": curves}
         records.append(rec)
@@ -121,7 +126,10 @@ def main() -> None:
             P = 1.0 / (1.0 + np.exp(-logits))
             curves = []
             for k in range(args.K_max):
-                curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
+                if args.decode == "softargmax":
+                    curve = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+                else:
+                    curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
                 curves.append(curve.tolist())
             records.append({"file": b["path"], "curves_ms": curves})
 
