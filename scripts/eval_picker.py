@@ -39,6 +39,7 @@ def main() -> None:
     ap.add_argument("--hit-tol", type=float, default=20.0)
     ap.add_argument("--decode", type=str, default="dp", choices=["dp", "softargmax"])
     ap.add_argument("--softargmax-power", type=float, default=1.0)
+    ap.add_argument("--conf-thresh", type=float, default=0.0, help="softargmax confidence threshold")
     args = ap.parse_args()
 
     torch = _require_torch()
@@ -97,7 +98,9 @@ def main() -> None:
             pred_curves = np.full((args.K_max, ds.grid.F), np.nan, dtype=np.float32)
             for k in range(args.K_max):
                 if args.decode == "softargmax":
-                    pred_curves[k] = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+                    pred_curves[k] = extract_curve_softargmax(
+                        P[k], c_axis, power=args.softargmax_power, conf_thresh=args.conf_thresh
+                    )
                 else:
                     pred_curves[k], _ = extract_curve_dp(P[k], c_axis, path_cfg)
 

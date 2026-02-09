@@ -44,6 +44,7 @@ def main() -> None:
     ap.add_argument("--plot-norm", action="store_true", help="plot normalized energy instead of raw log1p")
     ap.add_argument("--decode", type=str, default="dp", choices=["dp", "softargmax"])
     ap.add_argument("--softargmax-power", type=float, default=1.0)
+    ap.add_argument("--conf-thresh", type=float, default=0.0, help="softargmax confidence threshold")
     args = ap.parse_args()
 
     torch = _require_torch()
@@ -120,7 +121,9 @@ def main() -> None:
         pred_curves = []
         for k in range(args.K_max):
             if args.decode == "softargmax":
-                curve = extract_curve_softargmax(P[k], c_axis, power=args.softargmax_power)
+                curve = extract_curve_softargmax(
+                    P[k], c_axis, power=args.softargmax_power, conf_thresh=args.conf_thresh
+                )
             else:
                 curve, _ = extract_curve_dp(P[k], c_axis, path_cfg)
             pred_curves.append(curve)

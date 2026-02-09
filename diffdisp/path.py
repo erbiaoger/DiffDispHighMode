@@ -110,6 +110,7 @@ def extract_curve_softargmax(
     c_axis_ms: np.ndarray,
     power: float = 1.0,
     eps: float = 1e-8,
+    conf_thresh: float = 0.0,
 ) -> np.ndarray:
     """Continuous curve via soft-argmax on probability map.
 
@@ -126,4 +127,10 @@ def extract_curve_softargmax(
     W = np.clip(P, 0.0, 1.0) ** float(power)
     denom = np.sum(W, axis=1, keepdims=True) + eps
     curve = (W @ c_axis) / denom[:, 0]
-    return curve.astype(np.float32)
+    curve = curve.astype(np.float32)
+
+    if conf_thresh > 0.0:
+        max_conf = np.max(P, axis=1)
+        curve[max_conf < float(conf_thresh)] = np.nan
+
+    return curve
